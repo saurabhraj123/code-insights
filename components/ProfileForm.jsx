@@ -6,7 +6,6 @@ export default function ProfileForm(props) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [leetcode, setLeetcode] = useState("");
-  const [gfg, setGfg] = useState("");
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -18,7 +17,6 @@ export default function ProfileForm(props) {
       name: username,
       email,
       leetcode,
-      gfg,
     });
 
     const data = response.data;
@@ -39,9 +37,6 @@ export default function ProfileForm(props) {
     if (!leetcode) {
       setLeetcode(props.leetcode);
     }
-    if (!gfg) {
-      setGfg(props.gfg);
-    }
   });
 
   return (
@@ -54,7 +49,7 @@ export default function ProfileForm(props) {
               htmlFor="username"
               className="block text-gray-700 font-bold mb-2"
             >
-              Username
+              Username *
             </label>
             <input
               id="username"
@@ -70,7 +65,7 @@ export default function ProfileForm(props) {
               htmlFor="email"
               className="block text-gray-700 font-bold mb-2"
             >
-              Email
+              Email *
             </label>
             <input
               id="email"
@@ -87,28 +82,18 @@ export default function ProfileForm(props) {
               htmlFor="leetcode"
               className="block text-gray-700 font-bold mb-2"
             >
-              LeetCode Username (optional)
+              LeetCode Profile
             </label>
             <input
               id="leetcode"
               type="text"
               value={leetcode}
               onChange={(e) => setLeetcode(e.target.value)}
+              placeholder="https://leetcode.com/username/"
               className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="gfg" className="block text-gray-700 font-bold mb-2">
-              GFG Username (optional)
-            </label>
-            <input
-              id="gfg"
-              type="text"
-              value={gfg}
-              onChange={(e) => setGfg(e.target.value)}
-              className="border-2 border-gray-300 p-2 w-full rounded-lg focus:outline-none focus:border-blue-500"
-            />
-          </div>
+
           <div className="flex items-center justify-center">
             <button
               type="submit"
