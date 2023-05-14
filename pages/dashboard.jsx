@@ -3,6 +3,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import ProfileForm from "@/components/ProfileForm";
+import Stats from "@/components/Stats";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -20,6 +21,8 @@ export default function Dashboard() {
 
         if (data.error) {
           setNewUser(true);
+        } else {
+          setNewUser(false);
         }
       }
 
@@ -54,7 +57,8 @@ export default function Dashboard() {
             />
           </div>
         ) : (
-          <div>Dashboard</div>
+          // <div>Dashboard</div>
+          <Stats />
         ))}
     </Layout>
   );
