@@ -41,7 +41,7 @@ class Leetcode {
 
     console.log("i work here but not below this");
 
-    const variables = { username, limit: 30 };
+    const variables = { username, limit: 50 };
     try {
       const response = await axios.post(
         "https://leetcode.com/graphql/",

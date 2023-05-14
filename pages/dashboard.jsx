@@ -7,7 +7,8 @@ import Stats from "@/components/Stats";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
-  const [isNewUser, setNewUser] = useState(false);
+  const [isNewUser, setNewUser] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (session) {
@@ -24,6 +25,8 @@ export default function Dashboard() {
         } else {
           setNewUser(false);
         }
+
+        setLoading(false);
       }
 
       getUser();
@@ -49,6 +52,7 @@ export default function Dashboard() {
       )}
 
       {session &&
+        !loading &&
         (isNewUser ? (
           <div className="flex flex-1 mt-8 justify-center">
             <ProfileForm
@@ -58,6 +62,7 @@ export default function Dashboard() {
           </div>
         ) : (
           // <div>Dashboard</div>
+
           <Stats />
         ))}
     </Layout>

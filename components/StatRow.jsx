@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 
 export default function StatRow({ user, index, expandedRow, handleClickRow }) {
   const [solvedToday, setSolvedToday] = useState(0);
+  const [solvedCurrentWeek, setSolvedCurrentWeek] = useState(0);
   const [loading, setLoading] = useState(true);
 
   function isTimestampForCurrentDay(timestamp) {
@@ -21,15 +23,33 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
     return timestamp >= startOfDayTimestamp && timestamp < currentTimestamp;
   }
 
+  function isTimestampForCurrentWeek(timestamp) {
+    // Get the current timestamp
+    const currentTimestamp = Date.now();
+
+    // Calculate the timestamp for 7 days ago
+    const weekAgoTimestamp = currentTimestamp - 7 * 24 * 60 * 60 * 1000;
+
+    // Compare the provided timestamp with the timestamp from 7 days ago
+    return timestamp >= weekAgoTimestamp && timestamp <= currentTimestamp;
+  }
+
   useEffect(() => {
     const recentSubmissions = user.recentSubmissions;
     // console.log("recent", recentSubmissions);
 
-    let todaySubmissions = 0;
+    let todaySubmissions = 0,
+      weeklySubmissions = 0;
     if (recentSubmissions) {
       if (recentSubmissions.length) {
         todaySubmissions = recentSubmissions.reduce((a, c) => {
           if (isTimestampForCurrentDay(c.timestamp * 1000)) return a + 1;
+
+          return a;
+        }, 0);
+
+        weeklySubmissions = recentSubmissions.reduce((a, c) => {
+          if (isTimestampForCurrentWeek(c.timestamp * 1000)) return a + 1;
 
           return a;
         }, 0);
@@ -38,6 +58,7 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
 
     if (loading) {
       setSolvedToday(todaySubmissions);
+      setSolvedCurrentWeek(weeklySubmissions);
       setLoading(false);
     }
   }, [loading]);
@@ -45,9 +66,14 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
   return (
     <React.Fragment key={index}>
       <tr className="hover:bg-gray-100" onClick={() => handleClickRow(index)}>
-        <td className="py-2 pl-4 pr-2">{user.name}</td>
+        <td className="py-2 pl-4 pr-2 flex gap-2 items-center">
+          <a href={user.leetcode} target="_blank">
+            {user.name}
+          </a>
+          <ArrowUpRightIcon className="h-3 w-3" />
+        </td>
         <td className="py-2 text-center">{solvedToday}</td>
-        <td className="py-2 text-center">{user.lastSubmission}</td>
+        <td className="py-2 text-center">{solvedCurrentWeek}</td>
         <td className="py-2 text-center">{user.easySolved}</td>
         <td className="py-2 text-center">{user.mediumSolved}</td>
         <td className="py-2 text-center">{user.hardSolved}</td>

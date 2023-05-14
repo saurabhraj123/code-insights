@@ -130,7 +130,7 @@ export default function Stats() {
           <tr>
             <th className="w-1/12">Username</th>
             <th className="w-1/12">Today</th>
-            <th className="w-1/12">Last Submission</th>
+            <th className="w-1/12">Last 7 days</th>
             <th className="w-1/12">
               Easy - {friends.length && friends[0].totalEasy}
             </th>

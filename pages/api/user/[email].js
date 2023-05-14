@@ -59,7 +59,14 @@ export default async (req, res) => {
       }
 
       try {
-        const profile = friend.leetcode.split("/").pop();
+        const frndLeetcode = friend.leetcode;
+
+        console.log(
+          "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n friends leetcode is",
+          frndLeetcode
+        );
+        const profile = extractUsername(frndLeetcode);
+        // const profile = friend.leetcode.split("/").pop();
         const res = await axios.get(
           `http://localhost:3000/api/stats/leetcode/${profile}`
         );
@@ -100,3 +107,12 @@ export default async (req, res) => {
     }
   }
 };
+
+function extractUsername(url) {
+  const pattern = /https:\/\/leetcode\.com\/([^/]+)/;
+  const match = url.match(pattern);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return null;
+}
