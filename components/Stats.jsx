@@ -42,7 +42,7 @@ export default function Stats() {
 
         if (data.user.friends?.length) {
           setFriends(data.user.friends);
-          setLoading(false);
+          // setLoading(false);
 
           const frnds = data.user.friends;
           console.log("friends is", frnds);

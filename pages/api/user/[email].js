@@ -28,6 +28,14 @@ export default async (req, res) => {
           .json({ error: "User not found or email is incorrect" });
       }
 
+      if (name && leetcode) {
+        const updatedUser = await User.findOneAndUpdate(
+          { email },
+          { name, leetcode }
+        );
+        return res.send(200).send(updatedUser);
+      }
+
       if (friends) {
         const updateFields = {};
         updateFields.friends = friends;
