@@ -39,6 +39,7 @@ export default function Dashboard() {
 
   return (
     <Layout>
+      {loading && <p>Loading...</p>}
       {!session && (
         <p>
           You must login first.
