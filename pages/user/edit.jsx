@@ -30,7 +30,7 @@ export default function EditProfile() {
     const answer = window.confirm(`Remove ${name} from the list?`);
     if (answer) {
       const { data } = await axios.delete(
-        `http://localhost:3000/api/user/${session?.user?.email}?leetcode=${leetcode}`
+        `/api/user/${session?.user?.email}?leetcode=${leetcode}`
       );
 
       setFriends(data.friends);
@@ -44,9 +44,7 @@ export default function EditProfile() {
       if (email) {
         setLoading(true);
         console.log("loading..");
-        const { data } = await axios.get(
-          `http://localhost:3000/api/user/${email}`
-        );
+        const { data } = await axios.get(`/api/user/${email}`);
         console.log("data in edit is", data.user.friends);
 
         const frnds = data.user.friends;
@@ -94,13 +92,10 @@ export default function EditProfile() {
     e.preventDefault();
 
     setUserUpdateStatus("update-in-progress");
-    const { data } = await axios.put(
-      `http://localhost:3000/api/user/${session?.user?.email}`,
-      {
-        name: user.name,
-        leetcode: user.leetcode,
-      }
-    );
+    const { data } = await axios.put(`/api/user/${session?.user?.email}`, {
+      name: user.name,
+      leetcode: user.leetcode,
+    });
 
     setUserUpdateStatus("updated");
 
@@ -120,10 +115,9 @@ export default function EditProfile() {
     );
     fileteredFriends.push(updatedFriend);
 
-    const { data } = await axios.put(
-      `http://localhost:3000/api/user/${session?.user?.email}`,
-      { friends: fileteredFriends }
-    );
+    const { data } = await axios.put(`/api/user/${session?.user?.email}`, {
+      friends: fileteredFriends,
+    });
 
     setFriendUpdated(true);
     setShowPopup(false);
