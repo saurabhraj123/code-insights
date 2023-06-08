@@ -22,10 +22,6 @@ export default function EditProfile() {
   const tabs = ["Personal", "Friends"];
   const { data: session, status } = useSession();
 
-  if (!session) {
-    router.replace("/");
-  }
-
   const handleEditFriend = (name, leetcode) => {
     setShowPopup(true);
     console.log("name is", name);
@@ -47,6 +43,10 @@ export default function EditProfile() {
   };
 
   useEffect(() => {
+    if (!session) {
+      router.replace("/");
+    }
+
     async function getData() {
       const { email } = session?.user;
       if (email) {
