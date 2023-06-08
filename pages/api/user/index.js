@@ -26,9 +26,7 @@ export default async function handler(req, res) {
     // }
 
     const friends = [];
-    const { data } = await axios.get(
-      `http://localhost:3000/api/stats/leetcode/${leetcodeUsername}`
-    );
+    const { data } = await axios.get(`/api/stats/leetcode/${leetcodeUsername}`);
 
     data.name = name;
     data.leetcode = leetcode;

@@ -76,9 +76,7 @@ export default async (req, res) => {
         );
         const profile = extractUsername(frndLeetcode);
         // const profile = friend.leetcode.split("/").pop();
-        const res = await axios.get(
-          `http://localhost:3000/api/stats/leetcode/${profile}`
-        );
+        const res = await axios.get(`/api/stats/leetcode/${profile}`);
 
         if (res.data.error) {
           return res.status(404).send("Leetcode profile doesn't exist.");
