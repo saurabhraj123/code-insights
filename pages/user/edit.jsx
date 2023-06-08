@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import EditFriendPopup from "@/components/EditFriendPopup";
@@ -16,8 +17,14 @@ export default function EditProfile() {
   const [userUpdateStatus, setUserUpdateStatus] = useState("no-change");
   const [friendUpdated, setFriendUpdated] = useState(false);
 
+  const router = useRouter();
+
   const tabs = ["Personal", "Friends"];
   const { data: session, status } = useSession();
+
+  if (!session) {
+    router.replace("/");
+  }
 
   const handleEditFriend = (name, leetcode) => {
     setShowPopup(true);
@@ -34,6 +41,7 @@ export default function EditProfile() {
       );
 
       setFriends(data.friends);
+      setFriendUpdated(true);
       console.log("deletion data", data);
     }
   };
