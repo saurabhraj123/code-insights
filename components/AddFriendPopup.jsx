@@ -37,7 +37,7 @@ export default function AddFriendPopup({
 
       const { email } = session.user;
 
-      const res = await axios.put(`http://localhost:3000/api/user/${email}`, {
+      const res = await axios.put(`/api/user/${email}`, {
         friend: friend,
       });
 

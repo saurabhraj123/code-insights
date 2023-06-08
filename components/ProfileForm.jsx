@@ -25,7 +25,7 @@ export default function ProfileForm(props) {
 
       console.log("value of validation is:", value);
 
-      const response = await axios.post(`http://localhost:3000/api/user/`, {
+      const response = await axios.post(`/api/user/`, {
         name: username,
         email,
         leetcode,
