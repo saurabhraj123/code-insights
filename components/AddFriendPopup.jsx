@@ -11,6 +11,7 @@ export default function AddFriendPopup({
 }) {
   const [name, setName] = useState("");
   const [leetcode, setLeetcode] = useState("");
+  const [addInProgress, setAddInProgress] = useState(false);
   const [error, setError] = useState("");
 
   const boxRef = useRef(null);
@@ -22,6 +23,8 @@ export default function AddFriendPopup({
   };
 
   const handleSubmit = async () => {
+    setAddInProgress(true);
+
     try {
       const value = await addFriendSchema.validateAsync({
         name,
@@ -50,6 +53,8 @@ export default function AddFriendPopup({
 
       setError({ message: msg });
       console.log("error is:", err.message);
+
+      setAddInProgress(false);
     }
   };
 
@@ -65,7 +70,7 @@ export default function AddFriendPopup({
 
   return (
     <div
-      className={`fixed inset-0 z-10 bg-gray-900 bg-opacity-50 flex justify-center items-center ${
+      className={`fixed inset-0 z-10 bg-gray-900 bg-opacity-50 flex justify-center items-center z-[999999]${
         showFriendPopup ? "" : "hidden"
       }`}
       onClick={handlePopup}
@@ -116,7 +121,7 @@ export default function AddFriendPopup({
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
             onClick={handleSubmit}
           >
-            Submit
+            {addInProgress ? "Submitting.." : "Submit"}
           </button>
         </div>
       </div>

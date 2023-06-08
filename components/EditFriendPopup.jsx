@@ -10,6 +10,7 @@ export default function EditFriendPopup({
   const [name, setName] = useState(nameProp);
   const [leetcode, setLeetcode] = useState(leetcodeProp);
   const [error, setError] = useState("");
+  const [updateStatus, setUpdateStatus] = useState("no-change");
 
   const boxRef = useRef(null);
   const handlePopup = (e) => {
@@ -29,12 +30,12 @@ export default function EditFriendPopup({
 
   return (
     <div
-      className={`fixed inset-0 z-10 bg-gray-900 bg-opacity-50 flex justify-center items-center ${
+      className={`fixed inset-0 z-10 bg-gray-900 bg-opacity-50 flex justify-center items-center z-[999999999] ${
         showFriendPopup ? "" : "hidden"
       }`}
       onClick={handlePopup}
     >
-      <div className="bg-white w-96 rounded-lg p-4" ref={boxRef}>
+      <div className="bg-white w-96 rounded-lg p-4 z-[999999999]" ref={boxRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-medium text-gray-800">Add Friend</h2>
           <button
@@ -78,9 +79,12 @@ export default function EditFriendPopup({
         <div className="flex justify-center mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
-            onClick={() => handleSubmit(leetcodeProp, name, leetcode)}
+            onClick={() => {
+              setUpdateStatus("updating");
+              handleSubmit(leetcodeProp, name, leetcode);
+            }}
           >
-            Submit
+            {updateStatus === "updating" ? "Updating..." : "Update"}
           </button>
         </div>
       </div>

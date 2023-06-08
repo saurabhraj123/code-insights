@@ -17,6 +17,7 @@ export default async (req, res) => {
     await db.connect();
 
     const { email } = req.query;
+
     const { name, leetcode, friend, friends } = req.body;
 
     try {
@@ -112,6 +113,39 @@ export default async (req, res) => {
       }
     } catch (err) {
       return res.status(400).json({ error: err.message });
+    }
+  } else if (req.method === "DELETE") {
+    await db.connect();
+
+    const { email, leetcode } = req.query;
+    // const leetcode = req.body.leetcode;
+    console.log("deletion email is:", email);
+    console.log("req body is:", req.body);
+    console.log("deteltion leetcode profile is:", leetcode);
+
+    try {
+      const user = await User.findOne({ email: email });
+
+      const friends = user?.friends;
+      // console.log("my friends:", friends);
+      const updatedFriends = friends?.filter(
+        (friend) => friend.leetcode !== leetcode
+      );
+
+      console.log("my updated friends:", updatedFriends);
+
+      user.friends = updatedFriends;
+
+      const updateResult = await User.findOneAndUpdate(
+        { email: email },
+        { friends: updatedFriends }
+      );
+
+      console.log("deletion result is:", updateResult);
+
+      return res.send(updateResult);
+    } catch (err) {
+      return res.send(err);
     }
   }
 };
