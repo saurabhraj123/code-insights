@@ -29,10 +29,9 @@ export default function Stats() {
     console.log("ka ho");
     async function updateFriends(updatedFriends) {
       const { email } = session.user;
-      const { data } = await axios.put(
-        `http://localhost:3000/api/user/${email}`,
-        { friends: updatedFriends }
-      );
+      const { data } = await axios.put(`/api/user/${email}`, {
+        friends: updatedFriends,
+      });
 
       console.log("friends updated");
     }
@@ -45,9 +44,7 @@ export default function Stats() {
         console.log(
           "1111111111111111111111111111 Yaha hu main 111111111111111111111111111"
         );
-        const { data } = await axios.get(
-          `http://localhost:3000/api/user/${email}`
-        );
+        const { data } = await axios.get(`/api/user/${email}`);
 
         console.log("data is", data.user.friends);
 
@@ -72,7 +69,7 @@ export default function Stats() {
             for (const frnd of frnds) {
               const username = frnd.leetcode.split("/")[3];
               const { data } = await axios.get(
-                `http://localhost:3000/api/stats/leetcode/${username}`
+                `/api/stats/leetcode/${username}`
               );
 
               console.log("friend data is", data);

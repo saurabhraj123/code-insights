@@ -16,9 +16,7 @@ export default function Dashboard() {
       async function getUser() {
         const email = session.user.email;
 
-        const response = await axios.get(
-          `http://localhost:3000/api/user/${email}`
-        );
+        const response = await axios.get(`/api/user/${email}`);
         const data = response.data;
 
         if (data.error) {
