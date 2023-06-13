@@ -6,9 +6,10 @@ export default async function handler(req, res) {
   if (req.method == "POST") {
     await db.connect();
 
-    const { name, email, leetcode, gfg } = req.body;
+    const { name, email, leetcode } = req.body;
 
     const leetcodeUsername = extractUsername(leetcode);
+
     try {
       const response = await axios.get(
         `https://leetcode.com/${leetcodeUsername}`
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
 
     const friends = [];
     const { data } = await axios.get(
-      `${process.env.BACKEND_URI}/api/stats/leetcode/${leetcodeUsername}`
+      `https://code-insights.vercel.app/api/stats/leetcode/${leetcodeUsername}`
     );
 
     data.name = name;
@@ -40,7 +41,6 @@ export default async function handler(req, res) {
       name,
       email,
       leetcode,
-      gfg,
       friends,
     });
 
