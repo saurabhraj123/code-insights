@@ -1,38 +1,26 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Code Insigths
+A web app that helps you track progress of your friends on Leetcode. You can see the number of questions solved today, in last 7 days, total number of questions solved in each category (easy, medium, hard) and more.
 
-## Getting Started
+**Deployed at:** *https://code-insights.vercel.app/* 
 
-First, run the development server:
+## Technologies Used
+* Next.js
+* Tailwind
+* MongoDb
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+## Preview
+### Home Page
+![home page](https://github.com/saurabhraj123/code-insights/assets/24193157/5a983872-d2d4-4431-a0f9-544e24cfad3e)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Google Sign In 
+![login page](https://github.com/saurabhraj123/code-insights/assets/24193157/b0de73c3-7933-4aee-ae58-207e9d375bfe)
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Dashboard
+![dashboard](https://github.com/saurabhraj123/code-insights/assets/24193157/20abf580-cb51-4970-959d-961cd1bd63be)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+### Add a Friend
+![add frnd](https://github.com/saurabhraj123/code-insights/assets/24193157/9f9f2f72-1e5b-4d14-bf68-a7d162f58402)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Edit Profile
+![edit profile](https://github.com/saurabhraj123/code-insights/assets/24193157/cf24d165-8c38-488c-a4ed-36060c501a49)
+![edit 2](https://github.com/saurabhraj123/code-insights/assets/24193157/88d18260-7278-46dd-862d-5d11a7baaf1f)
