@@ -1,27 +1,23 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
 let connection;
 
 async function connect() {
-    if (connection) {
-        console.log('already connected');
-        return;
-    }
+  if (connection) return;
 
-    const db = await mongoose.connect(process.env.MONGODB_URL);
-    console.log('new connection');
-    connection = db.connection;
+  const db = await mongoose.connect(process.env.MONGODB_URL);
+  connection = db.connection;
 }
 
 async function disconnect() {
-    if (connection) {
-        if (process.env.NODE_ENV == 'production') {
-            await mongoose.disconnect();
-            connection = null;
-        } else {
-            console.log('not disconnected');
-        }
+  if (connection) {
+    if (process.env.NODE_ENV == "production") {
+      await mongoose.disconnect();
+      connection = null;
+    } else {
+      console.log("not disconnected");
     }
+  }
 }
 
 const db = { connect, disconnect };

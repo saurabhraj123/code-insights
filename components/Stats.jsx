@@ -12,8 +12,6 @@ export default function Stats() {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("");
-  // const [friendUpdate]
-
   const tableHeadings = ["today", "last 7 days", "last 30 days", "total"];
   const { data: session } = useSession();
 
@@ -26,14 +24,11 @@ export default function Stats() {
   };
 
   useEffect(() => {
-    console.log("ka ho");
     async function updateFriends(updatedFriends) {
       const { email } = session.user;
       const { data } = await axios.put(`/api/user/${email}`, {
         friends: updatedFriends,
       });
-
-      console.log("friends updated");
     }
 
     async function fetchData() {
@@ -41,19 +36,12 @@ export default function Stats() {
       setLoading(false);
 
       try {
-        console.log(
-          "1111111111111111111111111111 Yaha hu main 111111111111111111111111111"
-        );
         const { data } = await axios.get(`/api/user/${email}`);
-
-        console.log("data is", data.user.friends);
 
         if (data.user.friends?.length) {
           setFriends(data.user.friends);
 
           const frnds = data.user.friends;
-          console.log("friends is", frnds);
-
           const frndSize = frnds.length;
 
           if (friends.length === frndSize) return;
@@ -72,7 +60,6 @@ export default function Stats() {
                 `/api/stats/leetcode/${username}`
               );
 
-              console.log("friend data is", data);
               data.name = frnd.name;
               data.leetcode = frnd.leetcode;
 
@@ -86,18 +73,14 @@ export default function Stats() {
 
             updateFriends(friendData);
             setFriends(friendData);
+            sessionStorage.setItem("friends", JSON.stringify(friendData));
 
             toast.dismiss();
             toast.info("Data fetched succesfully.");
 
             setLoading(false);
           } catch (err) {
-            // Handle errors
-            console.log("error hai re", err);
-
             toast.dismiss();
-
-            // Show error toast message
             toast.error("Error fetching data");
             setLoading(false);
           }
@@ -107,8 +90,11 @@ export default function Stats() {
 
     async function initialLoad() {
       if (loading) {
-        console.log("I am called loading....");
-        await fetchData();
+        const frnds = sessionStorage.getItem("friends");
+
+        if (frnds) setFriends(JSON.parse(sessionStorage.getItem("friends")));
+        else await fetchData();
+
         setLoading(false);
       }
     }
@@ -146,37 +132,8 @@ export default function Stats() {
           >
             Add friend
           </button>
-          {/* <button className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md relative">
-              Compare
-            </button> */}
         </div>
       </div>
-      {/* <table className="table-fixed mt-4 mx-8">
-          <thead>
-            <tr>
-              <th className="w-1/12">Username</th>
-              <th className="w-1/12">Today</th>
-              <th className="w-1/12">Last 7 days</th>
-              <th className="w-1/12">Easy</th>
-              <th className="w-1/12">Medium</th>
-              <th className="w-1/12">Hard</th>
-              <th className="w-1/12">Total</th>
-              <th className="w-1/12"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {friends.map((friend, index) => (
-              <StatRow
-                key={index}
-                user={friend}
-                index={index}
-                expandedRow={expandedRow}
-                handleClickRow={handleClickRow}
-                className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
-              />
-            ))}
-          </tbody>
-        </table> */}
 
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg mx-24">
         <table className="w-full bg-white border border-gray-200">
