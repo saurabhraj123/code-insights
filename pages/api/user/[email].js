@@ -77,7 +77,7 @@ export default async (req, res) => {
         const profile = extractUsername(frndLeetcode);
         // const profile = friend.leetcode.split("/").pop();
         const res = await axios.get(
-          `https://code-insights.vercel.app/api/stats/leetcode/${profile}`
+          `${process.env.BACKEND_URI}/api/stats/leetcode/${profile}`
         );
 
         if (res.data.error) {

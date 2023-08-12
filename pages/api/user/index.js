@@ -22,13 +22,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // if (!response.data) {
-    //   return res.status(404).json({ error: "Invalid URL" });
-    // }
-
     const friends = [];
     const { data } = await axios.get(
-      `https://code-insights.vercel.app/api/stats/leetcode/${leetcodeUsername}`
+      `${process.env.BACKEND_URI}/api/stats/leetcode/${leetcodeUsername}`
     );
 
     data.name = name;

@@ -29,6 +29,10 @@ export default function Dashboard() {
       }
 
       getUser();
+
+      window.onbeforeunload = function (e) {
+        sessionStorage.clear();
+      };
     }
   });
 
@@ -80,15 +84,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        // <p>
-        //   You must login first.
-        //   <span
-        //     className="text-blue-600 hover:cursor-pointer"
-        //     onClick={() => signIn()}
-        //   >
-        //     Log in
-        //   </span>
-        // </p>
       )}
 
       {session &&
@@ -101,8 +96,6 @@ export default function Dashboard() {
             />
           </div>
         ) : (
-          // <div>Dashboard</div>
-
           <Stats />
         ))}
     </Layout>
