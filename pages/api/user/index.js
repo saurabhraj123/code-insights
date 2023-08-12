@@ -15,8 +15,6 @@ export default async function handler(req, res) {
         `https://leetcode.com/${leetcodeUsername}`
       );
     } catch (err) {
-      console.log("response status is", err);
-
       if (err) {
         return res.status(404).send("Leetcode Profile is not valid.");
       }
@@ -30,8 +28,6 @@ export default async function handler(req, res) {
     data.name = name;
     data.leetcode = leetcode;
     friends.push(data);
-
-    console.log("friends data is:", data);
 
     const user = new User({
       name,

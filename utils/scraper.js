@@ -39,8 +39,6 @@ class Leetcode {
   }
 `;
 
-    console.log("i work here but not below this");
-
     const variables = { username, limit: 50 };
     try {
       const response = await axios.post(
@@ -56,19 +54,13 @@ class Leetcode {
 
       const { data } = response;
 
-      console.log("response is:", response);
-
-      // Inspect response
       const { errors } = data;
       if (errors) {
-        console.log("error is:", errors);
         return { error: "user does not exist" };
       } else {
         return this.decodeGraphqlJson(data);
       }
-    } catch (err) {
-      console.log("err is", err);
-    }
+    } catch (err) {}
   }
 
   decodeGraphqlJson(json) {
@@ -89,7 +81,6 @@ class Leetcode {
     let recentSubmissions = {};
 
     try {
-      console.log("data", json.data.recentAcSubmissionList);
       const allQuestions = json.data.allQuestionsCount;
       const matchedUser = json.data.matchedUser;
       const submitStats = matchedUser.submitStats;
@@ -125,12 +116,7 @@ class Leetcode {
       Object.keys(submissionCalendarJson).forEach((timeKey) => {
         submissionCalendar[timeKey] = submissionCalendarJson[timeKey];
       });
-    } catch (ex) {
-      console.log("error", ex);
-      // return StatsResponse.error('error', ex.message);
-    }
-
-    // console.log('success', 'retrieved', totalSolved, totalQuestions, easySolved, totalEasy, mediumSolved, totalMedium, hardSolved, totalHard, acceptanceRate, ranking, contributionPoints, reputation, submissionCalendar)
+    } catch (ex) {}
 
     return {
       totalSolved,
@@ -150,8 +136,5 @@ class Leetcode {
     };
   }
 }
-
-// const statService = new Leetcode()
-// statService.getStats('me4saurabh4u');
 
 module.exports.Leetcode = Leetcode;

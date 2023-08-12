@@ -54,9 +54,7 @@ export default function EditProfile() {
       const { email } = session?.user;
       if (email) {
         setLoading(true);
-        console.log("loading..");
         const { data } = await axios.get(`/api/user/${email}`);
-        console.log("data in edit is", data.user.friends);
 
         const frnds = data.user.friends;
         frnds.sort((a, b) => {
@@ -109,12 +107,9 @@ export default function EditProfile() {
     });
 
     setUserUpdateStatus("updated");
-
-    console.log("user updated", data);
   };
 
   const handleFriendUpdate = async (oldLeetcode, newName, newLeetcode) => {
-    console.log("handleFriendUpdate");
     const updatedFriend = friends.find(
       (friend) => friend.leetcode === oldLeetcode
     );
@@ -127,7 +122,6 @@ export default function EditProfile() {
     );
     filteredFriends.push(updatedFriend);
 
-    console.log("here");
     const { data } = await axios.put(`/api/user/${session?.user?.email}`, {
       friends: filteredFriends,
     });

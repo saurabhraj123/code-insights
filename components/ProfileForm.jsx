@@ -23,8 +23,6 @@ export default function ProfileForm(props) {
         leetcode,
       });
 
-      console.log("value of validation is:", value);
-
       const response = await axios.post(`/api/user/`, {
         name: username,
         email,
@@ -32,7 +30,6 @@ export default function ProfileForm(props) {
       });
 
       const data = response.data;
-      console.log(data);
 
       if (!data.error) {
         router.push("/");
@@ -42,7 +39,6 @@ export default function ProfileForm(props) {
       // setError({ leetcode: "leetcode profile is not valid" });
 
       let msg = err.response?.data ? err.response.data : err.message;
-      console.log("message is:", msg);
 
       msg = msg || "leetcode profile is not valid";
       setError(msg);
