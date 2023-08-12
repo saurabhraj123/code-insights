@@ -24,7 +24,6 @@ export default function EditProfile() {
 
   const handleEditFriend = (name, leetcode) => {
     setShowPopup(true);
-    console.log("name is", name);
     setActiveFriendName(name);
     setActiveLeetcode(leetcode);
   };
@@ -36,9 +35,13 @@ export default function EditProfile() {
         `/api/user/${session?.user?.email}?leetcode=${leetcode}`
       );
 
-      setFriends(data.friends);
+      const updatedFriends = friends.filter(
+        (friend) => friend.leetcode != leetcode
+      );
+
+      setFriends(updatedFriends);
       setFriendUpdated(true);
-      console.log("deletion data", data);
+      sessionStorage.setItem("friends", JSON.stringify(updatedFriends));
     }
   };
 
@@ -76,7 +79,7 @@ export default function EditProfile() {
     }
 
     if (session) getData();
-  }, [session, friendUpdated]);
+  }, []);
 
   const handleNameChange = (e) => {
     e.preventDefault();
@@ -111,6 +114,7 @@ export default function EditProfile() {
   };
 
   const handleFriendUpdate = async (oldLeetcode, newName, newLeetcode) => {
+    console.log("handleFriendUpdate");
     const updatedFriend = friends.find(
       (friend) => friend.leetcode === oldLeetcode
     );
@@ -118,16 +122,17 @@ export default function EditProfile() {
     updatedFriend.name = newName;
     updatedFriend.leetcode = newLeetcode;
 
-    const fileteredFriends = friends.filter(
+    const filteredFriends = friends.filter(
       (friend) => friend.leetcode != oldLeetcode
     );
-    fileteredFriends.push(updatedFriend);
+    filteredFriends.push(updatedFriend);
 
+    console.log("here");
     const { data } = await axios.put(`/api/user/${session?.user?.email}`, {
-      friends: fileteredFriends,
+      friends: filteredFriends,
     });
 
-    setFriendUpdated(true);
+    sessionStorage.setItem("friends", JSON.stringify(filteredFriends));
     setShowPopup(false);
   };
 
