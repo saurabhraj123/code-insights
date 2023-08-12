@@ -108,20 +108,20 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
       </tr> */}
 
       <tr
-        class="hover:bg-gray-100 cursor-pointer"
+        className="hover:bg-gray-100 cursor-pointer"
         onClick={() => handleClickRow(index)}
       >
-        <td class="px-6 py-4 text font-bold">{index + 1}</td>
+        <td className="px-6 py-4 text font-bold">{index + 1}</td>
         <td className="px-6 py-4 py-2 flex ">
           <a href={user.leetcode} target="_blank">
             {user.name}
           </a>
           {/* <ArrowUpRightIcon className="h-3 w-3" /> */}
         </td>
-        <td class="px-6 py-4">{solvedToday}</td>
-        <td class="px-6 py-4">{solvedCurrentWeek}</td>
-        <td class="px-6 py-4">{solvedCurrentMonth}</td>
-        <td class="px-6 py-4">{user.totalSolved}</td>
+        <td className="px-6 py-4">{solvedToday}</td>
+        <td className="px-6 py-4">{solvedCurrentWeek}</td>
+        <td className="px-6 py-4">{solvedCurrentMonth}</td>
+        <td className="px-6 py-4">{user.totalSolved}</td>
       </tr>
       {expandedRow === index && (
         <tr>
