@@ -17,6 +17,15 @@ export default function AddFriendPopup({
   const boxRef = useRef(null);
   const { data: session } = useSession();
 
+  const extractUsername = (url) => {
+    const pattern = /https:\/\/leetcode\.com\/([^/]+)/;
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return null;
+  };
+
   const handlePopup = (e) => {
     if (boxRef.current && !boxRef.current.contains(e.target))
       setShowFriendPopup(false);
@@ -44,7 +53,16 @@ export default function AddFriendPopup({
       console.log("response is", res);
       console.log("value is:", friend);
 
+      const { data: stats } = await axios.get(
+        `/api/stats/leetcode/${extractUsername(leetcode)}`
+      );
+
+      console.log("stats", stats);
+
       setShowFriendPopup(false);
+      const newFriendsList = JSON.parse(sessionStorage.getItem("friends"));
+      newFriendsList.push({ ...friend, ...stats });
+      sessionStorage.setItem("friends", JSON.stringify(newFriendsList));
       handleLoading(true);
     } catch (err) {
       console.log("err is", err.response?.data);
