@@ -178,68 +178,47 @@ export default function Stats() {
           </tbody>
         </table> */}
 
-      <div class="overflow-x-auto bg-white shadow-lg rounded-lg mx-24">
-        <table class="w-full bg-white border border-gray-200">
-          <thead class="bg-gray-800 text-white">
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg mx-24">
+        <table className="w-full bg-white border border-gray-200">
+          <thead className="bg-gray-800 text-white">
             <tr>
-              <th scope="col" class="px-6 py-3 text-left">
+              <th scope="col" className="px-6 py-3 text-left">
                 #
               </th>
-              <th scope="col" class="px-6 py-3 text-left">
+              <th scope="col" className="px-6 py-3 text-left">
                 Username
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-left"
+                className="px-6 py-3 text-left"
                 onClick={() => handleSort("today")}
               >
                 Today
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-left"
+                className="px-6 py-3 text-left"
                 onClick={() => handleSort("last 7 days")}
               >
                 Last 7 days
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-left"
+                className="px-6 py-3 text-left"
                 onClick={() => handleSort("last 30 days")}
               >
                 Last 30 days
               </th>
               <th
                 scope="col"
-                class="px-6 py-3 text-left"
+                className="px-6 py-3 text-left"
                 onClick={() => handleSort("total")}
               >
                 Total
               </th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-gray-200">
-            {/* <tr class="hover:bg-gray-100 cursor-pointer">
-                <td class="px-6 py-4">User1</td>
-                <td class="px-6 py-4">5</td>
-                <td class="px-6 py-4">32</td>
-                <td class="px-6 py-4">100</td>
-                <td class="px-6 py-4">137</td>
-              </tr>
-              <tr class="hover:bg-gray-100 cursor-pointer">
-                <td class="px-6 py-4">User2</td>
-                <td class="px-6 py-4">10</td>
-                <td class="px-6 py-4">45</td>
-                <td class="px-6 py-4">90</td>
-                <td class="px-6 py-4">145</td>
-              </tr>
-              <tr class="hover:bg-gray-100 cursor-pointer">
-                <td class="px-6 py-4">User3</td>
-                <td class="px-6 py-4">8</td>
-                <td class="px-6 py-4">50</td>
-                <td class="px-6 py-4">80</td>
-                <td class="px-6 py-4">138</td>
-              </tr> */}
+          <tbody className="divide-y divide-gray-200">
             {friends.map((friend, index) => (
               <StatRow
                 key={index}
