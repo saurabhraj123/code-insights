@@ -49,7 +49,7 @@ export default function Stats() {
           try {
             const friendData = [];
 
-            toast.info(`Fetching latest data (0/${frndSize})`, {
+            toast.info(`Updating stats (0/${frndSize})`, {
               autoClose: false,
             });
 
@@ -66,7 +66,7 @@ export default function Stats() {
               friendData.push(data);
 
               toast.dismiss();
-              toast.info(`Fetching latest data (${i++}/${frndSize})`, {
+              toast.info(`Updating stats (${i++}/${frndSize})`, {
                 autoClose: false,
               });
             }
@@ -100,8 +100,6 @@ export default function Stats() {
     }
 
     initialLoad();
-
-    console.log("Friends", friends);
   }, [loading, showFriendPopup]);
 
   const handleClickRow = (index) => {
