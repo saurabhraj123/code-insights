@@ -50,14 +50,9 @@ export default function AddFriendPopup({
         friend: friend,
       });
 
-      console.log("response is", res);
-      console.log("value is:", friend);
-
       const { data: stats } = await axios.get(
         `/api/stats/leetcode/${extractUsername(leetcode)}`
       );
-
-      console.log("stats", stats);
 
       setShowFriendPopup(false);
       const newFriendsList = JSON.parse(sessionStorage.getItem("friends"));
@@ -65,12 +60,9 @@ export default function AddFriendPopup({
       sessionStorage.setItem("friends", JSON.stringify(newFriendsList));
       handleLoading(true);
     } catch (err) {
-      console.log("err is", err.response?.data);
-
       const msg = err.response?.data ? err.response.data : err.message;
 
       setError({ message: msg });
-      console.log("error is:", err.message);
 
       setAddInProgress(false);
     }

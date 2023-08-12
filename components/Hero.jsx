@@ -14,13 +14,11 @@ export default function Hero() {
   let onSelect = (event) => {
     const site = event.value.toLowerCase();
     setSelectedSite(event.value);
-    console.log(event);
   };
 
   let handleChange = (e) => {
     const username = e.target.value;
     setUserName(username);
-    console.log(e.target.value);
   };
 
   let DropdownList = () => {
@@ -37,12 +35,9 @@ export default function Hero() {
   };
 
   let getStats = async () => {
-    console.log("i am here", selectedSite);
     if (selectedSite === "leetcode") {
       const BACKEND_URI = "http://localhost:3000";
       const response = await axios.get(`/api/user/${selectedSite}/${userName}`);
-
-      console.log("response is", response);
     }
   };
 
