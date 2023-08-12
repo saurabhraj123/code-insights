@@ -78,10 +78,9 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
             {user.name}
           </a>
         </td>
-        <td className="px-6 py-4">{solvedToday}</td>
-        <td className="px-6 py-4">{solvedCurrentWeek}</td>
-        <td className="px-6 py-4">{solvedCurrentMonth}</td>
-        <td className="px-6 py-4">{user.totalSolved}</td>
+        <td className="px-6 py-4 text-center">{solvedToday}</td>
+        <td className="px-6 py-4 text-center">{solvedCurrentWeek}</td>
+        <td className="px-6 py-4 text-center">{user.totalSolved}</td>
       </tr>
       {expandedRow === index && (
         <tr>

@@ -145,28 +145,21 @@ export default function Stats() {
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left"
+                className="px-6 py-3 text-center"
                 onClick={() => handleSort("today")}
               >
                 Today
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left"
+                className="px-6 py-3 text-center"
                 onClick={() => handleSort("last 7 days")}
               >
                 Last 7 days
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left"
-                onClick={() => handleSort("last 30 days")}
-              >
-                Last 30 days
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-left"
+                className="px-6 py-3 text-center"
                 onClick={() => handleSort("total")}
               >
                 Total
