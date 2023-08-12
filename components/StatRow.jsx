@@ -73,13 +73,19 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
         onClick={() => handleClickRow(index)}
       >
         <td className="px-6 py-4 text font-bold">{index + 1}</td>
-        <td className="px-6 py-4 py-2 flex ">
+        <td className="px-6 py-2 flex ">
           <a href={user.leetcode} target="_blank">
             {user.name}
           </a>
         </td>
-        <td className="px-6 py-4 text-center">{solvedToday}</td>
-        <td className="px-6 py-4 text-center">{solvedCurrentWeek}</td>
+        <td className="px-6 py-4 text-center">
+          {solvedToday}
+          {solvedToday >= 20 && <span className="text-sm">+</span>}
+        </td>
+        <td className="flex items-center justify-center px-6 py-4 text-center">
+          {solvedCurrentWeek}
+          {solvedCurrentWeek >= 20 && <span className="flex text-xs">+</span>}
+        </td>
         <td className="px-6 py-4 text-center">{user.totalSolved}</td>
       </tr>
       {expandedRow === index && (
