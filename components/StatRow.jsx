@@ -5,8 +5,6 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
   const [solvedCurrentWeek, setSolvedCurrentWeek] = useState(0);
   const [solvedCurrentMonth, setSolvedCurrentMonth] = useState(0);
 
-  const [loading, setLoading] = useState(true);
-
   function isTimestampForCurrentDay(timestamp) {
     const currentDate = new Date();
     const currentTimestamp = currentDate.getTime();
@@ -63,13 +61,10 @@ export default function StatRow({ user, index, expandedRow, handleClickRow }) {
       }
     }
 
-    if (loading) {
-      setSolvedToday(todaySubmissions);
-      setSolvedCurrentWeek(weeklySubmissions);
-      setSolvedCurrentMonth(monthlySubmissions);
-      setLoading(false);
-    }
-  }, [loading]);
+    setSolvedToday(todaySubmissions);
+    setSolvedCurrentWeek(weeklySubmissions);
+    setSolvedCurrentMonth(monthlySubmissions);
+  });
 
   return (
     <React.Fragment key={index}>
