@@ -130,155 +130,158 @@ export default function EditProfile() {
     setShowPopup(false);
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <ThreeDots
-          height="80"
-          width="80"
-          radius="9"
-          color="#3b82f6"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{}}
-          wrapperClassName=""
-          visible={true}
-        />
-      </div>
-    );
-  }
+  const loadingComponent = (
+    <div className="flex items-center justify-center h-screen w-full">
+      <ThreeDots
+        height="80"
+        width="80"
+        radius="9"
+        color="#3b82f6"
+        ariaLabel="three-dots-loading"
+        wrapperStyle={{}}
+        wrapperClassName=""
+        visible={true}
+      />
+    </div>
+  );
 
   return (
     <Layout>
-      {!session && <p>Please login first...</p>}
-      {session && (
-        <div className="flex flex-col w-full items-center bg-gray-50 ">
-          <h1 className="mt-5 mb-3 text-xl">Edit Profile</h1>
-          <div className="flex flex-col rounded-lg shadow-lg w-full border b-1 max-w-[800px]">
-            <div className="flex bg-white">
-              <div className="w-[20%] border-r-2">
-                {tabs.map((tabString, index) => (
-                  <div
-                    key={index}
-                    className={`${
-                      index === selectedTab ? "bg-blue-500 text-white" : ""
-                    } ${
-                      index === tabs.length - 1 ? "" : "border-b-2"
-                    } pl-3 p-2 cursor-pointer`}
-                    onClick={() => setSelectedTab(index)}
-                  >
-                    {tabString}
-                  </div>
-                ))}
-              </div>
-              <div className="flex-grow p-4">
-                {selectedTab === 0 && (
-                  <div>
-                    <h2 className="text-lg font-semibold">
-                      Personal Information
-                    </h2>
-                    <form className="mt-4">
-                      <div className="mb-4">
-                        <label className="block font-semibold mb-1">
-                          Name:
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          className="border border-gray-300 rounded-md px-2 py-1 w-full"
-                          value={user.name}
-                          onChange={handleNameChange}
-                        />
-                      </div>
-                      <div>
-                        <label className="block font-semibold mb-1">
-                          LeetCode Username:
-                        </label>
-                        <input
-                          type="text"
-                          name="leetcode"
-                          className="border border-gray-300 rounded-md px-2 py-1 w-full"
-                          value={user.leetcode}
-                          onChange={handleLeetcodeChange}
-                        />
-                      </div>
-                      <button
-                        className={`mt-4 bg-blue-500 text-white px-4 py-2 rounded ${
-                          userUpdateStatus === "no-change" ||
-                          userUpdateStatus === "updated"
-                            ? "bg-gray-500"
-                            : "bg-blue-500"
-                        }`}
-                        onClick={handleUserUpdate}
-                        disabled={
-                          userUpdateStatus === "no-change" ||
-                          userUpdateStatus === "updated"
-                            ? true
-                            : false
-                        }
+      {loading
+        ? loadingComponent
+        : (!session && <p>Please login first...</p>) ||
+          (session && (
+            <div className="flex flex-col w-full items-center bg-gray-50 ">
+              <h1 className="mt-5 mb-3 text-xl">Edit Profile</h1>
+              <div className="flex flex-col rounded-lg shadow-lg w-full border b-1 max-w-[800px]">
+                <div className="flex bg-white">
+                  <div className="w-[20%] border-r-2">
+                    {tabs.map((tabString, index) => (
+                      <div
+                        key={index}
+                        className={`${
+                          index === selectedTab ? "bg-blue-500 text-white" : ""
+                        } ${
+                          index === tabs.length - 1 ? "" : "border-b-2"
+                        } pl-3 p-2 cursor-pointer`}
+                        onClick={() => setSelectedTab(index)}
                       >
-                        {userUpdateStatus === "update-in-progress"
-                          ? "Updating..."
-                          : userUpdateStatus === "updated"
-                          ? "Updated"
-                          : "Save"}
-                      </button>
-                    </form>
+                        {tabString}
+                      </div>
+                    ))}
                   </div>
-                )}
-                {selectedTab === 1 && (
-                  <div>
-                    <h2 className="text-lg font-semibold">Friends List</h2>
-                    {/* {loading && <p>Loading...</p>} */}
-                    {
-                      <ul className="mt-4">
-                        {friends.map((friend, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center justify-between mt-2"
+                  <div className="flex-grow p-4">
+                    {selectedTab === 0 && (
+                      <div>
+                        <h2 className="text-lg font-semibold">
+                          Personal Information
+                        </h2>
+                        <form className="mt-4">
+                          <div className="mb-4">
+                            <label className="block font-semibold mb-1">
+                              Name:
+                            </label>
+                            <input
+                              type="text"
+                              name="name"
+                              className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                              value={user.name}
+                              onChange={handleNameChange}
+                            />
+                          </div>
+                          <div>
+                            <label className="block font-semibold mb-1">
+                              LeetCode Username:
+                            </label>
+                            <input
+                              type="text"
+                              name="leetcode"
+                              className="border border-gray-300 rounded-md px-2 py-1 w-full"
+                              value={user.leetcode}
+                              onChange={handleLeetcodeChange}
+                            />
+                          </div>
+                          <button
+                            className={`mt-4 bg-blue-500 text-white px-4 py-2 rounded ${
+                              userUpdateStatus === "no-change" ||
+                              userUpdateStatus === "updated"
+                                ? "bg-gray-500"
+                                : "bg-blue-500"
+                            }`}
+                            onClick={handleUserUpdate}
+                            disabled={
+                              userUpdateStatus === "no-change" ||
+                              userUpdateStatus === "updated"
+                                ? true
+                                : false
+                            }
                           >
-                            <span>{friend.name}</span>
-                            <div>
-                              <button
-                                className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
-                                onClick={() =>
-                                  handleEditFriend(friend.name, friend.leetcode)
-                                }
+                            {userUpdateStatus === "update-in-progress"
+                              ? "Updating..."
+                              : userUpdateStatus === "updated"
+                              ? "Updated"
+                              : "Save"}
+                          </button>
+                        </form>
+                      </div>
+                    )}
+                    {selectedTab === 1 && (
+                      <div>
+                        <h2 className="text-lg font-semibold">Friends List</h2>
+                        {/* {loading && <p>Loading...</p>} */}
+                        {
+                          <ul className="mt-4">
+                            {friends.map((friend, index) => (
+                              <li
+                                key={index}
+                                className="flex items-center justify-between mt-2"
                               >
-                                Edit
-                              </button>
-                              <button
-                                className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                                onClick={() =>
-                                  handleRemoveFriend(
-                                    friend.name,
-                                    friend.leetcode
-                                  )
-                                }
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    }
+                                <span>{friend.name}</span>
+                                <div>
+                                  <button
+                                    className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+                                    onClick={() =>
+                                      handleEditFriend(
+                                        friend.name,
+                                        friend.leetcode
+                                      )
+                                    }
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
+                                    onClick={() =>
+                                      handleRemoveFriend(
+                                        friend.name,
+                                        friend.leetcode
+                                      )
+                                    }
+                                  >
+                                    Remove
+                                  </button>
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        }
 
-                    {showPopup && (
-                      <EditFriendPopup
-                        showFriendPopup={showPopup}
-                        setShowFriendPopup={setShowPopup}
-                        nameProp={activeFriendName}
-                        leetcodeProp={activeFriendLeetcode}
-                        handleSubmit={handleFriendUpdate}
-                      />
+                        {showPopup && (
+                          <EditFriendPopup
+                            showFriendPopup={showPopup}
+                            setShowFriendPopup={setShowPopup}
+                            nameProp={activeFriendName}
+                            leetcodeProp={activeFriendLeetcode}
+                            handleSubmit={handleFriendUpdate}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          ))}
     </Layout>
   );
 }
