@@ -46,9 +46,7 @@ export default function EditProfile() {
   };
 
   useEffect(() => {
-    if (!session) {
-      router.replace("/");
-    }
+    if (!session) router.replace("/");
 
     async function getData() {
       const { email } = session?.user;
