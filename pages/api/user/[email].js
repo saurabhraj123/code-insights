@@ -64,7 +64,7 @@ export default async (req, res) => {
           { name, leetcode, friends: updatedFriends }
         );
 
-        return res.send(200).send(updatedUser);
+        return res.status(200).send(updatedUser);
       }
 
       if (friends) {
