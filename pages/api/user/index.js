@@ -10,24 +10,16 @@ export default async function handler(req, res) {
 
     const leetcodeUsername = extractUsername(leetcode);
 
-    try {
-      const response = await axios.get(
-        `https://leetcode.com/${leetcodeUsername}`
-      );
-    } catch (err) {
-      if (err) {
-        return res.status(404).send("Leetcode Profile is not valid.");
-      }
-    }
-
     const friends = [];
-    const { data } = await axios.get(
-      `${process.env.BACKEND_URI}/api/stats/leetcode/${leetcodeUsername}`
-    );
+    if (leetcodeUsername) {
+      const { data } = await axios.get(
+        `${process.env.BACKEND_URI}/api/stats/leetcode/${leetcodeUsername}`
+      );
 
-    data.name = name;
-    data.leetcode = leetcode;
-    friends.push(data);
+      data.name = name;
+      data.leetcode = leetcode;
+      friends.push(data);
+    }
 
     const user = new User({
       name,

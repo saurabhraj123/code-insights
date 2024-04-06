@@ -3,11 +3,11 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { PlusIcon, MinusIcon } from "@heroicons/react/24/solid";
 import addFriendSchema from "@/utils/addFriendValidator";
+import Spinner from "./Spinner";
 
 export default function AddFriendPopup({
   showFriendPopup,
   setShowFriendPopup,
-  handleLoading,
 }) {
   const [name, setName] = useState("");
   const [leetcode, setLeetcode] = useState("");
@@ -40,15 +40,23 @@ export default function AddFriendPopup({
         leetcode,
       });
 
-      const friend = {};
-      friend["name"] = name;
-      friend["leetcode"] = leetcode;
+      const friend = { name, leetcode };
 
       const { email } = session.user;
+      console.log({ email, friend, value });
 
       const res = await axios.put(`/api/user/${email}`, {
         friend: friend,
       });
+
+      if (res.status == 404) {
+        console.log("did I come here");
+        setError({ message: res.data });
+        setAddInProgress(false);
+        return;
+      }
+
+      console.log("data", res.data);
 
       const { data: stats } = await axios.get(
         `/api/stats/leetcode/${extractUsername(leetcode)}`
@@ -58,12 +66,12 @@ export default function AddFriendPopup({
       const newFriendsList = JSON.parse(sessionStorage.getItem("friends"));
       newFriendsList.push({ ...friend, ...stats });
       sessionStorage.setItem("friends", JSON.stringify(newFriendsList));
-      handleLoading(true);
     } catch (err) {
       const msg = err.response?.data ? err.response.data : err.message;
-
-      setError({ message: msg });
-
+      console.log({ err });
+      if (typeof msg === "string") setError({ message: msg });
+      else setError({ message: "Somethign went wrong" });
+      console.log("error", err);
       setAddInProgress(false);
     }
   };
@@ -91,11 +99,7 @@ export default function AddFriendPopup({
           <button
             className="text-gray-500 hover:text-gray-600 focus:outline-none"
             onClick={() => setShowFriendPopup(true)}
-          >
-            {/* <PlusIcon className="w-6 h-6" /> */}
-            {/* remove */}
-            {/* <HiX className="w-6 h-6" /> */}
-          </button>
+          ></button>
         </div>
         <div className="mb-4">
           <label htmlFor="name" className="block text-gray-700">
@@ -128,10 +132,16 @@ export default function AddFriendPopup({
 
         <div className="flex justify-center mt-4">
           <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md"
+            className={`flex items-center gap-3 bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md ${
+              addInProgress
+                ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300 "
+                : ""
+            }`}
             onClick={handleSubmit}
+            disabled={addInProgress}
           >
-            {addInProgress ? "Submitting.." : "Submit"}
+            <div>Submit</div>
+            {addInProgress ? <Spinner /> : null}
           </button>
         </div>
       </div>
