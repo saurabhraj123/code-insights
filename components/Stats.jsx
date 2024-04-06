@@ -3,112 +3,71 @@ import StatRow from "./StatRow";
 import AddFriendPopup from "./AddFriendPopup";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import FullScreenLoader from "./FullScreenLoader";
 
 export default function Stats() {
   const [expandedRow, setExpandedRow] = useState(null);
   const [showFriendPopup, setShowFriendPopup] = useState(false);
   const [friends, setFriends] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState("");
-  const tableHeadings = ["today", "last 7 days", "last 30 days", "total"];
+  const [loading, setLoading] = useState(false);
+
   const { data: session } = useSession();
 
-  const handlePopup = (val) => {
-    setShowFriendPopup(val);
+  const getStatsFromSessionStorage = () => {
+    return JSON.parse(sessionStorage.getItem("friends"));
   };
 
-  const handleSort = (sortCol) => {
-    setSortBy(sortCol);
+  const getStats = async () => {
+    setLoading(true);
+    try {
+      const localFriends = getStatsFromSessionStorage();
+      if (localFriends) {
+        setFriends(localFriends);
+        setLoading(false);
+        return;
+      }
+
+      const { email } = session.user;
+      const { data } = await axios.get(`/api/user/${email}`);
+      const friends = data.user.friends;
+      if (friends.length) setFriends(friends);
+      updateStats(friends);
+    } catch (err) {
+      setLoading(false);
+    }
   };
+
+  async function updateStats(fetchedFriends) {
+    try {
+      const statPromises = fetchedFriends.map((friend) => {
+        const username = friend.leetcode.split("/")[3];
+        return axios.get(`/api/stats/leetcode/${username}`);
+      });
+
+      const updatedFriendsResponse = await Promise.all(statPromises);
+      const updatedFriends = updatedFriendsResponse.map((response, index) => {
+        return { ...fetchedFriends[index], ...response.data };
+      });
+
+      updateFriends(updatedFriends);
+      setFriends(updatedFriends);
+      sessionStorage.setItem("friends", JSON.stringify(updatedFriends));
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+    }
+  }
+
+  async function updateFriends(updatedFriends) {
+    const { email } = session.user;
+    const { data } = await axios.put(`/api/user/${email}`, {
+      friends: updatedFriends,
+    });
+  }
 
   useEffect(() => {
-    async function updateFriends(updatedFriends) {
-      const { email } = session.user;
-      const { data } = await axios.put(`/api/user/${email}`, {
-        friends: updatedFriends,
-      });
-    }
-
-    async function fetchData() {
-      const { email } = session.user;
-      setLoading(false);
-
-      try {
-        const { data } = await axios.get(`/api/user/${email}`);
-
-        if (data.user.friends?.length) {
-          setFriends(data.user.friends);
-
-          const frnds = data.user.friends;
-          const frndSize = frnds.length;
-
-          if (friends.length === frndSize) return;
-
-          try {
-            const friendData = [];
-
-            toast.info(`Updating stats (0/${frndSize})`, {
-              autoClose: false,
-            });
-
-            let i = 1;
-            for (const frnd of frnds) {
-              const username = frnd.leetcode.split("/")[3];
-              const { data } = await axios.get(
-                `/api/stats/leetcode/${username}`
-              );
-
-              data.name = frnd.name;
-              data.leetcode = frnd.leetcode;
-
-              friendData.push(data);
-
-              toast.dismiss();
-              toast.info(`Updating stats (${i++}/${frndSize})`, {
-                autoClose: false,
-              });
-            }
-
-            updateFriends(friendData);
-            setFriends(friendData);
-            sessionStorage.setItem("friends", JSON.stringify(friendData));
-
-            toast.dismiss();
-            toast.info("Data fetched succesfully.");
-
-            setLoading(false);
-          } catch (err) {
-            toast.dismiss();
-            toast.error("Error fetching data");
-            setLoading(false);
-          }
-        }
-      } catch (err) {}
-    }
-
-    async function initialLoad() {
-      if (loading) {
-        const frnds = sessionStorage.getItem("friends");
-
-        if (frnds) setFriends(JSON.parse(sessionStorage.getItem("friends")));
-        else await fetchData();
-
-        setLoading(false);
-      }
-    }
-
-    initialLoad();
-  }, [loading, showFriendPopup]);
-
-  const handleClickRow = (index) => {
-    setExpandedRow(expandedRow === index ? null : index);
-  };
-
-  const handleLoading = (val) => {
-    setLoading(val);
-  };
+    getStats();
+  }, [showFriendPopup]);
 
   return (
     <div className="p-4 bg-gray-50 w-full">
@@ -118,8 +77,7 @@ export default function Stats() {
           <div>
             <AddFriendPopup
               showFriendPopup={showFriendPopup}
-              setShowFriendPopup={handlePopup}
-              handleLoading={handleLoading}
+              setShowFriendPopup={setShowFriendPopup}
             />
           </div>
         )}
@@ -133,54 +91,57 @@ export default function Stats() {
         </div>
       </div>
 
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg mx-24">
-        <table className="w-full bg-white border border-gray-200">
-          <thead className="bg-gray-800 text-white">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left">
-                #
-              </th>
-              <th scope="col" className="px-6 py-3 text-left">
-                Username
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-center"
-                onClick={() => handleSort("today")}
-              >
-                Today
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-center"
-                onClick={() => handleSort("last 7 days")}
-              >
-                Last 7 days
-              </th>
-              <th
-                scope="col"
-                className="px-6 py-3 text-center"
-                onClick={() => handleSort("total")}
-              >
-                Total
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {friends.map((friend, index) => (
-              <StatRow
-                key={index}
-                user={friend}
-                index={index}
-                expandedRow={expandedRow}
-                handleClickRow={handleClickRow}
-                className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ToastContainer position="bottom-left" />
+      {loading && (
+        <div className="h-[50px]">
+          <FullScreenLoader />
+        </div>
+      )}
+
+      {friends.length === 0 && !loading && (
+        <p className="mx-24 text-teal-700">
+          No friends found. Click on the Add Friend button to add a friend.
+        </p>
+      )}
+
+      {friends.length !== 0 && !loading && (
+        <div className="overflow-x-auto bg-white shadow-lg rounded-lg mx-24">
+          <table className="w-full bg-white border border-gray-200">
+            <thead className="bg-gray-800 text-white">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left">
+                  #
+                </th>
+                <th scope="col" className="px-6 py-3 text-left">
+                  Username
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Today
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Last 7 days
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200">
+              {friends.map((friend, index) => (
+                <StatRow
+                  key={index}
+                  user={friend}
+                  index={index}
+                  expandedRow={expandedRow}
+                  handleClickRow={() =>
+                    setExpandedRow(expandedRow === index ? null : index)
+                  }
+                  className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

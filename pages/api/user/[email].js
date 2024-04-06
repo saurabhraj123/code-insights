@@ -17,8 +17,10 @@ export default async (req, res) => {
     await db.connect();
 
     const { email } = req.query;
+    if (!email) return res.status(400).json({ error: "Email is required" });
 
     const { name, leetcode, friend, friends } = req.body;
+    console.log({ name, leetcode, friend, friends });
 
     try {
       const user = await User.findOne({ email });
@@ -30,10 +32,38 @@ export default async (req, res) => {
       }
 
       if (name && leetcode) {
+        console.log("not inside2");
+        const oldFriends = user.friends;
+        const updatedFriends =
+          oldFriends?.filter((friend) => friend.leetcode !== user.leetcode) ||
+          [];
+
+        const leetcodeUsername = extractUsername(leetcode);
+
+        console.log("before");
+        const { data } = await axios.get(
+          `${process.env.BACKEND_URI}/api/stats/leetcode/${leetcodeUsername}`
+        );
+
+        console.log("ata", { data });
+        console.log("after");
+
+        if (data?.error) {
+          console.log("error", data?.error);
+          return res.status(404).send("Leetcode profile doesn't exist.");
+        }
+
+        if (data) {
+          data.name = name;
+          data.leetcode = leetcode;
+          updatedFriends.push(data);
+        }
+
         const updatedUser = await User.findOneAndUpdate(
           { email },
-          { name, leetcode }
+          { name, leetcode, friends: updatedFriends }
         );
+
         return res.send(200).send(updatedUser);
       }
 
@@ -71,15 +101,19 @@ export default async (req, res) => {
 
         const profile = extractUsername(frndLeetcode);
         // const profile = friend.leetcode.split("/").pop();
-        const res = await axios.get(
+        const response = await axios.get(
           `${process.env.BACKEND_URI}/api/stats/leetcode/${profile}`
         );
 
-        if (res.data.error) {
+        console.log("you look here", response);
+
+        if (response.data.error) {
+          console.log("Not here");
           return res.status(404).send("Leetcode profile doesn't exist.");
         }
+        console.log("Naftot here");
 
-        const { data } = res;
+        const { data } = response;
 
         const updateFields = {};
 
@@ -101,6 +135,7 @@ export default async (req, res) => {
           .status(200)
           .json({ message: "User updated", user: updatedUser });
       } catch (err) {
+        console.log("right here", err);
         return res.send("Leetcode profile doesn't exist.");
       }
     } catch (err) {

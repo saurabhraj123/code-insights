@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     try {
       const leetcode = new Leetcode();
       const data = await leetcode.getStats(userName);
-      return res.status(200).send(data);
+      return res.status(200).json(data);
     } catch (error) {
       return res.status(404).send("Leetcode profile not found.");
     }
