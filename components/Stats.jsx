@@ -659,6 +659,9 @@ export default function Stats() {
   const formatLastUpdated = (date) => {
     if (!date) return "Unknown";
 
+    // Convert the server date to local timezone
+    const localDate = new Date(date.getTime());
+
     // Format date as "Today at 2:30 PM" or "Jan 15 at 2:30 PM"
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -666,19 +669,19 @@ export default function Stats() {
     yesterday.setDate(yesterday.getDate() - 1);
 
     // Format the time part
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
+    let hours = localDate.getHours();
+    const minutes = localDate.getMinutes();
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
-    hours = hours ? 12 : 12; // the hour '0' should be '12'
+    hours = hours ? hours : 12; // the hour '0' should be '12'
     const timeStr = `${hours}:${
       minutes < 10 ? "0" + minutes : minutes
     } ${ampm}`;
 
     // Check if it's today or yesterday
-    if (date >= today) {
+    if (localDate >= today) {
       return `Today at ${timeStr}`;
-    } else if (date >= yesterday) {
+    } else if (localDate >= yesterday) {
       return `Yesterday at ${timeStr}`;
     } else {
       // Format as "Jan 15 at 2:30 PM"
@@ -696,7 +699,9 @@ export default function Stats() {
         "Nov",
         "Dec",
       ];
-      return `${months[date.getMonth()]} ${date.getDate()} at ${timeStr}`;
+      return `${
+        months[localDate.getMonth()]
+      } ${localDate.getDate()} at ${timeStr}`;
     }
   };
 
