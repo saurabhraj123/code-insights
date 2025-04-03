@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   BarChart,
   Bar,
@@ -23,8 +23,48 @@ const COLORS = [
   "#82ca9d",
 ];
 
-export function CompareChart({ mainUser, compareUsers, data }) {
+export function CompareChart({ mainUser, compareUsers, data, onClose }) {
   const [chartType, setChartType] = useState("bar");
+  const modalRef = useRef(null);
+
+  // Handle Escape key press
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && onClose) {
+        onClose();
+      }
+    };
+
+    // Add event listener for keydown
+    document.addEventListener("keydown", handleEscape);
+
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [onClose]);
+
+  // Handle click outside of modal content
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        onClose
+      ) {
+        onClose();
+      }
+    };
+
+    // Only add listener if onClose is provided
+    if (onClose) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
 
   // Format data for charts
   const formatDataForBarChart = () => {
@@ -80,6 +120,7 @@ export function CompareChart({ mainUser, compareUsers, data }) {
     return (
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
+          accessibilityLayer={true}
           data={barData}
           margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
         >
@@ -200,7 +241,7 @@ export function CompareChart({ mainUser, compareUsers, data }) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full" ref={modalRef}>
       <div className="flex justify-center mb-8">
         <div className="inline-flex rounded-md shadow-sm" role="group">
           <button

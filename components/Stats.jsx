@@ -1624,6 +1624,7 @@ export default function Stats() {
                     mainUser={compareData.mainUser}
                     compareUsers={compareData.compareUsers}
                     data={compareData.data}
+                    onClose={closeCompareResultsModal}
                   />
                 </div>
               ) : (
