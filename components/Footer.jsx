@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 // Fix the import path for react-icons
-import { FaGithub, FaLinkedin, FaTwitter, FaCode } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaCode } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 
 export default function Footer() {
   return (
@@ -13,7 +14,7 @@ export default function Footer() {
         </div>
         <div className="flex space-x-4">
           <a
-            href="https://github.com"
+            href="https://github.com/saurabhraj123"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-gray-600"
@@ -21,7 +22,7 @@ export default function Footer() {
             <FaGithub className="h-5 w-5" />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/saurabhcu"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-gray-600"
@@ -29,12 +30,12 @@ export default function Footer() {
             <FaLinkedin className="h-5 w-5" />
           </a>
           <a
-            href="https://twitter.com"
+            href="https://leetcode.com/me4saurabh4u"
             target="_blank"
             rel="noopener noreferrer"
             className="text-gray-400 hover:text-gray-600"
           >
-            <FaTwitter className="h-5 w-5" />
+            <SiLeetcode className="h-5 w-5" />
           </a>
         </div>
       </div>
