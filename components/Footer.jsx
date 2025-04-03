@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 // Fix the import path for react-icons
-import { FaGithub, FaLinkedin, FaCode } from "react-icons/fa6";
+import { FaGithub, FaLinkedin, FaCode, FaEnvelope } from "react-icons/fa6";
 import { SiLeetcode } from "react-icons/si";
 
 export default function Footer() {
@@ -36,6 +36,14 @@ export default function Footer() {
             className="text-gray-400 hover:text-gray-600"
           >
             <SiLeetcode className="h-5 w-5" />
+          </a>
+          <a
+            href="mailto:me4saurabh4u@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <FaEnvelope className="h-5 w-5" />
           </a>
         </div>
       </div>
