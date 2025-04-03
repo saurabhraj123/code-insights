@@ -1,6 +1,7 @@
 const User = require("../../../models/User");
 const db = require("../../../utils/db");
 const axios = require("axios");
+const { extractUsername } = require("../../../utils/leetcodeUtils");
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -35,13 +36,4 @@ export default async function handler(req, res) {
       res.status(400).json({ message: err.message });
     }
   }
-}
-
-function extractUsername(url) {
-  const pattern = /https:\/\/leetcode\.com\/([^/]+)/;
-  const match = url.match(pattern);
-  if (match && match[1]) {
-    return match[1];
-  }
-  return null;
 }

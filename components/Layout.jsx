@@ -12,7 +12,7 @@ export default function Layout({ title, children }) {
       <div className="flex flex-col min-h-screen">
         <Header />
 
-        <main className="flex flex-1">{children}</main>
+        <main className="flex flex-grow">{children}</main>
 
         <div className="">
           <Footer />

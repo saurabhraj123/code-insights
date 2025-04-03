@@ -1,7 +1,11 @@
 const axios = require("axios");
 
 class Leetcode {
-  async getStats(username) {
+  constructor() {
+    // ...existing constructor code...
+  }
+
+  async getStats(username, forceRefresh = false) {
     const query = `
   query getUserProfile($username: String!, $limit: Int!) {
     allQuestionsCount {
@@ -58,9 +62,148 @@ class Leetcode {
       if (errors) {
         return { error: "user does not exist" };
       } else {
-        return this.decodeGraphqlJson(data);
+        const stats = this.decodeGraphqlJson(data);
+
+        // Extract submissions from the response for calculations
+        const recentSubmissions = data?.data?.recentAcSubmissionList || [];
+        const formattedSubmissions = recentSubmissions.map((submission) => ({
+          problemId: submission.id,
+          title: submission.title,
+          timestamp: submission.timestamp * 1000, // Convert to milliseconds
+        }));
+
+        return {
+          ...stats,
+          solvedToday: this.calculateSolvedToday(formattedSubmissions),
+          solvedCurrentWeek:
+            this.calculateSolvedCurrentWeek(formattedSubmissions),
+        };
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+      return { error: "Failed to fetch user data" };
+    }
+  }
+
+  // New method to get recent activity data
+  async getRecentActivity(username) {
+    try {
+      const query = `
+      query recentAcSubmissions($username: String!, $limit: Int!) {
+        recentAcSubmissionList(username: $username, limit: $limit) {
+          id
+          title
+          titleSlug
+          timestamp
+        }
+      }`;
+
+      const variables = { username, limit: 50 };
+      const response = await axios.post(
+        "https://leetcode.com/graphql/",
+        { query, variables },
+        {
+          headers: {
+            referer: `https://leetcode.com/${username}/`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const recentSubmissions =
+        response?.data?.data?.recentAcSubmissionList || [];
+      const formattedSubmissions = recentSubmissions.map((submission) => ({
+        problemId: submission.id,
+        title: submission.title,
+        timestamp: submission.timestamp * 1000, // Convert to milliseconds
+      }));
+
+      return {
+        solvedToday: this.calculateSolvedToday(formattedSubmissions),
+        solvedCurrentWeek:
+          this.calculateSolvedCurrentWeek(formattedSubmissions),
+      };
+    } catch (error) {
+      console.error(`Error getting recent activity for ${username}:`, error);
+      return { solvedToday: 0, solvedCurrentWeek: 0 };
+    }
+  }
+
+  // Method to get submission data with timestamps
+  async getSubmissionData(username, forceRefresh = false) {
+    try {
+      const query = `
+      query recentAcSubmissions($username: String!, $limit: Int!) {
+        recentAcSubmissionList(username: $username, limit: $limit) {
+          id
+          title
+          titleSlug
+          timestamp
+        }
+      }`;
+
+      const variables = { username, limit: 50 };
+      const response = await axios.post(
+        "https://leetcode.com/graphql/",
+        { query, variables },
+        {
+          headers: {
+            referer: `https://leetcode.com/${username}/`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const recentSubmissions =
+        response?.data?.data?.recentAcSubmissionList || [];
+      return recentSubmissions.map((submission) => ({
+        problemId: submission.id,
+        title: submission.title,
+        timestamp: submission.timestamp * 1000, // Convert to milliseconds
+      }));
+    } catch (error) {
+      console.error(`Error getting submission data for ${username}:`, error);
+      return [];
+    }
+  }
+
+  // Calculate problems solved today
+  calculateSolvedToday(submissions) {
+    if (!submissions || !Array.isArray(submissions)) return 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of today
+
+    const uniqueProblemsSolvedToday = new Set();
+
+    submissions.forEach((submission) => {
+      const submissionDate = new Date(submission.timestamp);
+      if (submissionDate >= today) {
+        uniqueProblemsSolvedToday.add(submission.problemId);
+      }
+    });
+
+    return uniqueProblemsSolvedToday.size;
+  }
+
+  // Calculate problems solved in the last 7 days
+  calculateSolvedCurrentWeek(submissions) {
+    if (!submissions || !Array.isArray(submissions)) return 0;
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const uniqueProblemsSolvedThisWeek = new Set();
+
+    submissions.forEach((submission) => {
+      const submissionDate = new Date(submission.timestamp);
+      if (submissionDate >= sevenDaysAgo) {
+        uniqueProblemsSolvedThisWeek.add(submission.problemId);
+      }
+    });
+
+    return uniqueProblemsSolvedThisWeek.size;
   }
 
   decodeGraphqlJson(json) {
@@ -137,4 +280,7 @@ class Leetcode {
   }
 }
 
-module.exports.Leetcode = Leetcode;
+module.exports = {
+  Leetcode,
+  // ...other exports...
+};

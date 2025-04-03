@@ -1,18 +1,31 @@
 const User = require("../../../models/User");
 const db = require("../../../utils/db");
 const axios = require("axios");
+const { extractUsername } = require("../../../utils/leetcodeUtils");
 
 export default async (req, res) => {
   if (req.method == "GET") {
     const { email } = req.query;
 
-    await db.connect();
-    const user = await User.findOne({ email });
+    console.log(`GET request for user with email: ${email}`);
 
-    if (!user) {
-      return res.status(200).json({ error: "user not found" });
+    try {
+      await db.connect();
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        console.log(`User not found for email: ${email}`);
+        return res.status(404).json({ error: "user not found" });
+      }
+
+      console.log(`User found for email: ${email}`);
+      res.status(200).json({ user });
+    } catch (error) {
+      console.error(`Error fetching user with email ${email}:`, error);
+      return res
+        .status(500)
+        .json({ error: "Database error", details: error.message });
     }
-    res.status(200).json({ user });
   } else if (req.method === "PUT") {
     await db.connect();
 
@@ -32,7 +45,6 @@ export default async (req, res) => {
       }
 
       if (name && leetcode) {
-        console.log("not inside2");
         const oldFriends = user.friends;
         const updatedFriends =
           oldFriends?.filter((friend) => friend.leetcode !== user.leetcode) ||
@@ -167,12 +179,3 @@ export default async (req, res) => {
     }
   }
 };
-
-function extractUsername(url) {
-  const pattern = /https:\/\/leetcode\.com\/([^/]+)/;
-  const match = url.match(pattern);
-  if (match && match[1]) {
-    return match[1];
-  }
-  return null;
-}

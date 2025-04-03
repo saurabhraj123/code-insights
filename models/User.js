@@ -24,9 +24,8 @@ const userSchema = new mongoose.Schema({
       totalMedium: { type: Number, default: 0 },
       hardSolved: { type: Number, default: 0 },
       totalHard: { type: Number, default: 0 },
-      totalMedium: { type: Number, default: 0 },
-      totalMedium: { type: Number, default: 0 },
       recentSubmissions: { type: [RecentSubmissionSchema], default: [] },
+      order: { type: Number, default: 0 }, // Add order field to maintain the custom order
     },
   ],
 });
